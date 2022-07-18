@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { Uploadform } from "./components/upload-form";
+import { TableData } from "./components/table-data";
+import './App.css'
 
 function App() {
+  const [data, setData] = useState([])
+
+  const onViewClicked = async (e) => {
+    e.preventDefault()
+
+    try {
+      const response = await fetch('http://localhost:3000/files')
+      const res = await response.json();
+      setData(res)
+  } catch {}
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={onViewClicked} className="view">View file content</button>
+      <Uploadform />
+      {data.length !== 0 ? 
+        <TableData data={data} />
+      :
+        null
+      }
     </div>
   );
 }
